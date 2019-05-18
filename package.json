@@ -1,0 +1,33 @@
+{
+  "name": "node-sequelize",
+  "version": "0.0.0",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon"
+  },
+  "keywords": [
+    "node",
+    "rest",
+    "api"
+  ],
+  "author": "akang",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "~1.9.1",
+    "pg": "^7.11.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^5.8.6"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
