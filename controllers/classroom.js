@@ -192,18 +192,48 @@ module.exports = {
 
   delete(req, res) {
     return Classroom
-      .findById(req.params.id)
-      .then(classroom => {
-        if (!classroom) {
-          return res.status(400).send({
-            message: 'Classroom Not Found',
-          });
+      .findAll({
+        where:{
+          id: req.body.id
         }
-        return classroom
-          .destroy()
-          .then(() => res.status(204).send())
-          .catch((error) => res.status(400).send(error));
       })
-      .catch((error) => res.status(400).send(error));
+      .then((data) => {
+        if(data.length > 0){
+          return Classroom
+            .destroy({
+              where:{
+                id: req.body.id
+              }
+            })
+            .then(() => {
+              const response = {
+                status: true,
+                data: "data Berhasil Di Hapus"
+              };
+              res.status(200).send(response); 
+            })
+            .catch((error) => {
+              const response = {
+                status: false,
+                data: error
+              };
+              res.status(400).send(response)
+            });
+        }else{
+          const response = {
+            status: false,
+            data: "Data Tidak Ada"
+          };
+          res.status(404).send(response)
+        }
+        
+      })
+      .catch((error) => {
+        const response = {
+          status: false,
+          data: error
+        };
+        res.status(400).send(response)
+      });
   },
 };

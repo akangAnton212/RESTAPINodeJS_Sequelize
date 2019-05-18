@@ -10,7 +10,7 @@ router.get('/api/classroom', classroomController.list);
 router.get('/api/classroom/:id', classroomController.getById);
 router.post('/api/classroom', classroomController.add);
 router.post('/api/update/classroom', classroomController.update);
-router.delete('/api/classroom/:id', classroomController.delete);
+router.post('/api/delete/classroom/', classroomController.delete);
 
 /* ROUTER STUDENS */
 router.get('/api/student', studentController.list);
