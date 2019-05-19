@@ -9,39 +9,88 @@ module.exports = {
         include: [{
           model: Classroom,
           as: 'classroom'
-        },{
-          model: Course,
-          as: 'courses'
         }],
         order: [
           ['createdAt', 'DESC'],
-          [{ model: Course, as: 'courses' }, 'createdAt', 'DESC'],
         ],
       })
-      .then((students) => res.status(200).send(students))
-      .catch((error) => { res.status(400).send(error); });
+      .then((data) => {
+        if(data.length > 0){
+          const val = data.map((rest) => {
+            return {
+              id_student: rest.id,
+              id_classroom: rest.classroom_id,
+              student_name:rest.student_name,
+              id_classroom: rest.classroom.id,
+              class_name: rest.classroom.class_name
+            };
+          })
+
+          const response = {
+            status: true,
+            data: val
+          };
+
+          res.status(200).json(response);
+        }
+      })
+      .catch((error) => { 
+        const response = {
+          status: false,
+          data: error
+        };
+        res.status(400).send(response); 
+      });
   },
 
   getById(req, res) {
     return Student
-      .findById(req.params.id, {
+      .findAll({
+        where: {
+          id:req.params.id
+        },
         include: [{
           model: Classroom,
           as: 'classroom'
-        },{
-          model: Course,
-          as: 'courses'
         }],
+        order: [
+          ['createdAt', 'DESC'],
+        ],
       })
-      .then((student) => {
-        if (!student) {
-          return res.status(404).send({
-            message: 'Student Not Found',
-          });
+      .then((data) => {
+        if(data.length > 0){
+          const val = data.map((rest) => {
+            return {
+              id_student: rest.id,
+              id_classroom: rest.classroom_id,
+              student_name:rest.student_name,
+              id_classroom: rest.classroom.id,
+              class_name: rest.classroom.class_name
+            };
+          })
+
+          const response = {
+            status: true,
+            data: val
+          };
+
+          res.status(200).json(response);
+        }else{
+          const response = {
+            status: false,
+            data: "Data Tidak Ada"
+          };
+
+          res.status(404).json(response);
         }
-        return res.status(200).send(student);
       })
-      .catch((error) => res.status(400).send(error));
+      .catch((error) => {
+        const response = {
+          status: false,
+          data: error
+        };
+        res.status(400).send(response); 
+      });
   },
 
   add(req, res) {
@@ -50,51 +99,120 @@ module.exports = {
         classroom_id: req.body.classroom_id,
         student_name: req.body.student_name,
       })
-      .then((student) => res.status(201).send(student))
-      .catch((error) => res.status(400).send(error));
+      .then((data) => {
+          res.status(200).json({
+            status:true,
+            data: "Sukses Input Data",
+            result:data
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({
+          message:"Kesalahan Server",
+          error: err
+        });
+      });
   },
 
   update(req, res) {
     return Student
-      .findById(req.params.id, {
+      .findAll({
+        where: {
+          id: req.body.id
+        },
         include: [{
           model: Classroom,
           as: 'classroom'
-        },{
-          model: Course,
-          as: 'courses'
         }],
       })
-      .then(student => {
-        if (!student) {
-          return res.status(404).send({
-            message: 'Student Not Found',
-          });
-        }
-        return student
+      .then((data) => {
+        if(data.length > 0){
+          return Student
           .update({
-            student_name: req.body.student_name || classroom.student_name,
+            student_name: req.body.student_name,
+            classroom_id: req.body.classroom_id,
+          },{
+            where: {
+              id:req.body.id
+            }
           })
-          .then(() => res.status(200).send(student))
-          .catch((error) => res.status(400).send(error));
+          .then(() => {
+            const response = {
+              status: true,
+              data: "Data Berhasil Di Update"
+            };
+
+            res.status(200).json(response);
+          })
+          .catch((error) => {
+            const response = {
+              status: false,
+              data: error
+            };
+            res.status(400).send(response); 
+          });
+        }else{
+          const response = {
+            status: false,
+            data: "Data Tidak Ada"
+          };
+          res.status(404).json(response);
+        }
+        
       })
-      .catch((error) => res.status(400).send(error));
+      .catch((error) => {
+        const response = {
+          status: false,
+          data: error
+        };
+        res.status(400).send(response); 
+      });
   },
 
   delete(req, res) {
     return Student
-      .findById(req.params.id)
-      .then(student => {
-        if (!student) {
-          return res.status(400).send({
-            message: 'Student Not Found',
-          });
+      .findAll({
+        where: {
+          id:req.body.id
         }
-        return student
-          .destroy()
-          .then(() => res.status(204).send())
-          .catch((error) => res.status(400).send(error));
       })
-      .catch((error) => res.status(400).send(error));
+      .then((data) => {
+        if(data.length > 0){
+          return Student
+          .destroy({
+            where :{
+              id: req.body.id
+            }
+          })
+          .then(() => {
+            const response = {
+              status: true,
+              data: "data Berhasil Di Hapus"
+            };
+            res.status(200).json(response); 
+          })
+          .catch((error) => {
+            const response = {
+              status: false,
+              data: error
+            };
+            res.status(400).json(response)
+          });
+        }else{
+          const response = {
+            status: false,
+            data: "Data Tidak Ada"
+          };
+          res.status(404).json(response)
+        }
+        
+      })
+      .catch((error) => {
+        const response = {
+          status: false,
+          data: error
+        };
+        res.status(400).send(response)
+      });
   },
 };

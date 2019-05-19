@@ -210,21 +210,21 @@ module.exports = {
                 status: true,
                 data: "data Berhasil Di Hapus"
               };
-              res.status(200).send(response); 
+              res.status(200).json(response); 
             })
             .catch((error) => {
               const response = {
                 status: false,
                 data: error
               };
-              res.status(400).send(response)
+              res.status(400).json(response)
             });
         }else{
           const response = {
             status: false,
             data: "Data Tidak Ada"
           };
-          res.status(404).send(response)
+          res.status(404).json(response)
         }
         
       })

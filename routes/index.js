@@ -16,8 +16,8 @@ router.post('/api/delete/classroom/', classroomController.delete);
 router.get('/api/student', studentController.list);
 router.get('/api/student/:id', studentController.getById);
 router.post('/api/student', studentController.add);
-router.put('/api/student/:id', studentController.update);
-router.delete('/api/student/:id', studentController.delete);
+router.post('/api/update/student/', studentController.update);
+router.post('/api/student/:id', studentController.delete);
 
 /* ROUTER LECTURER */
 router.get('/api/lecturer', lecturerController.list);
